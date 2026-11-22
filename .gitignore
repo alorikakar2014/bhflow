@@ -1,12 +1,2 @@
-__pycache__/
-*.pyc
 .ipynb_checkpoints/
-*.h5
-*.hdf5
-*.npy
-*.npz
-*.out
-*.err
 slurm-*.out
-data/
-outputs/
