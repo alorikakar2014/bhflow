@@ -11,5 +11,10 @@ gravitational-wave (GW) and electromagnetic (EM) observations.
   BH–halo relation, accretion) fitted to both datasets, each with its own selection function,
   to infer one BHMF for binaries + singles.
 
+## Key references
+- Bonoli et al., *Constraints on the early growth of massive black holes from PTA and JWST with L-Galaxies BH* — [arXiv:2509.12325](https://arxiv.org/abs/2509.12325)
+- *Gravitational Wave Forecasts Constrained by JWST AGN Observations for Early Massive Black Hole Mergers* — [arXiv:2409.18194](https://arxiv.org/abs/2409.18194)
+- Cáceres-Burgos et al., *Black Hole merger rates in the first billion years in light of JWST data* — [arXiv:2511.20414](https://arxiv.org/abs/2511.20414)
+
 ## Status
 Work in progress.
