@@ -1,4 +1,4 @@
-# joint_gw_em_BHMF
+# bhflow
 
 Joint reconstruction of the massive black hole mass function (BHMF) by combining
 gravitational-wave (GW) and electromagnetic (EM) observations.
