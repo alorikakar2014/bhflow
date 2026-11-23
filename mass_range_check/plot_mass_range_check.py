@@ -66,7 +66,8 @@ LOWZ = {}   # label -> (z, logM)
 # SDSS DR16Q quasar properties (Wu & Shen 2022): small extract made from dr16q_prop_May01_2024.fits.gz
 f16 = glob.glob(os.path.join(LOWZ_DIR, 'dr16q_*extract*.npz'))
 if f16:
-    d16 = np.load(f16[0]); ok = np.isfinite(d16['z']) & np.isfinite(d16['logMBH']) & (d16['logMBH'] > 0)
+    d16 = np.load(f16[0])   # quality cut: valid fiducial virial mass with error < 0.5 dex, z > 0
+    ok = np.isfinite(d16['z']) & (d16['z'] > 0) & np.isfinite(d16['logMBH']) & (d16['logMBH'] > 0) & (d16['logMBH_err'] > 0) & (d16['logMBH_err'] < 0.5)
     LOWZ['SDSS DR16Q quasars (Wu & Shen 22)'] = (d16['z'][ok], d16['logMBH'][ok]); print('DR16Q:', ok.sum(), 'quasars')
 else:
     print('DR16Q extract not found in', LOWZ_DIR)
@@ -141,6 +142,17 @@ LBL = {'quasar_ground': r'$z\geq6$ quasars (Inayoshi+20, Fan+23)', 'quasar_jwst_
 
 
 # ---------------------------------------------------------------- 4. the plot
+def density_fill(ax, mm, zz, zorder=1.5):
+    """Shaded density contours enclosing 50/90/99% of a large sample (used for DR16Q)."""
+    from scipy.ndimage import gaussian_filter
+    me, ze = np.arange(5.5, 11.6, 0.05), np.arange(0.0, 6.0, 0.05)
+    H, _, _ = np.histogram2d(mm, zz, bins=(me, ze)); H = gaussian_filter(H, 1.2)
+    s = np.sort(H.ravel())[::-1]; c = np.cumsum(s) / s.sum()
+    lev = [s[np.searchsorted(c, f)] for f in (0.99, 0.90, 0.50)] + [H.max()*1.01]
+    mc, zc = 0.5*(me[1:]+me[:-1]), 0.5*(ze[1:]+ze[:-1])
+    ax.contourf(mc, zc, H.T, levels=lev, colors=['#dcdcdc', '#b4b4b4', '#8c8c8c'], alpha=0.85, zorder=zorder)
+    ax.contour(mc, zc, H.T, levels=lev[:1], colors='#6e6e6e', linewidths=1.0, zorder=zorder)
+
 def mz_plot(zmax=20, mrange=(0.5, 10.5), ax=None, show_lowz=True, legend=True, det_labels=None):
     if ax is None:
         fig, ax = plt.subplots(figsize=(13, 10))
@@ -176,7 +188,7 @@ def mz_plot(zmax=20, mrange=(0.5, 10.5), ax=None, show_lowz=True, legend=True, d
     # AGN / quasar data: neutral inks, identity by marker, thin white edge
     for lab, (zz, mm) in (LOWZ.items() if show_lowz else []):
         if lab.startswith('SDSS'):
-            ax.scatter(mm, zz, marker='.', s=2, c='#b0b0b0', alpha=0.25, lw=0, rasterized=True, zorder=4)
+            density_fill(ax, mm, zz)
         else:
             ax.scatter(mm, zz, **MSTY['local'], zorder=5)
     for cat, st in MSTY.items():
@@ -187,7 +199,7 @@ def mz_plot(zmax=20, mrange=(0.5, 10.5), ax=None, show_lowz=True, legend=True, d
     ax.set_xlabel(r'$\log_{10}(M/M_\odot)$'); ax.set_ylabel(r'$z$')
     ax.minorticks_on(); ax.grid(color='0.9', lw=0.7, zorder=0)
     if legend:
-        h = [Line2D([], [], ls='none', marker='o', ms=7, mfc='#b0b0b0', mec='none', label=k) for k in LOWZ if k.startswith('SDSS')]
+        h = [Patch(fc='#b4b4b4', ec='#6e6e6e', lw=1.0, label=k) for k in LOWZ if k.startswith('SDSS')]
         h += [Line2D([], [], ls='none', marker=MSTY['local']['marker'], ms=16, mfc=MSTY['local']['c'], mec='white',
                      label=k.replace(' (RV15 PDF tables)', ' (RV15)') + r', $z<0.06$') for k in LOWZ if not k.startswith('SDSS')]
         h += [Line2D([], [], ls='none', marker=st['marker'], ms=np.sqrt(st['s'])*1.15, mfc=st['c'], mec='white', mew=0.8,
@@ -210,6 +222,6 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots(figsize=(13, 7.5))
     mz_plot(ax=ax, zmax=2.2, mrange=(3.5, 10.5),
-            det_labels={'XG': (3.78, 0.55), 'LGWA': (4.7, 1.95), 'LISA': (7.45, 1.95)})
+            det_labels={'XG': (3.78, 0.55), 'LGWA': (4.7, 1.95), 'LISA': (7.25, 1.95)})
     ax.set_ylim(-0.05, 2.2)
     save(fig, 'mass_range_check_lowz_zoom')
