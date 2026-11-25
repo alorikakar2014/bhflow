@@ -15,6 +15,10 @@ gravitational-wave (GW) and electromagnetic (EM) observations.
 - Bonoli et al., *Constraints on the early growth of massive black holes from PTA and JWST with L-Galaxies BH* — [arXiv:2509.12325](https://arxiv.org/abs/2509.12325)
 - *Gravitational Wave Forecasts Constrained by JWST AGN Observations for Early Massive Black Hole Mergers* — [arXiv:2409.18194](https://arxiv.org/abs/2409.18194)
 - Cáceres-Burgos et al., *Black Hole merger rates in the first billion years in light of JWST data* — [arXiv:2511.20414](https://arxiv.org/abs/2511.20414)
+- Lapi et al. 2026 (JCAP), *Semi-empirical framework of supermassive black hole evolution: highlighting a possible tension between demographics and gravitational wave background* — [arXiv:2507.15436](https://arxiv.org/abs/2507.15436)
+  Closest prior work: continuity + Smoluchowski equation, MCMC fit to EM data + PTA amplitude (z ≲ 7). No explicit seeds, no LISA. Base framework for bhflow.
+- Roberts et al. 2026, *Too many or too massive? Investigating the high-z demography of active SMBHs from JWST* — [arXiv:2601.23250](https://arxiv.org/abs/2601.23250)
+  Continuity-equation view of JWST AGN at z ≳ 5 (EM only). Useful for high-z M_BH–M★ relation and EM-side inputs.
 
 ## Status
 Work in progress.
